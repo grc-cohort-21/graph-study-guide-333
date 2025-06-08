@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,8 +26,19 @@ public class Practice {
    * @param starting the starting vertex (may be null)
    * @return the number of vertices with odd values reachable from the starting vertex
    */
-  public static int oddVertices(Vertex<Integer> starting) {
-    return 0;
+  public static <T> int oddVertices(Vertex<Integer> starting, List<Vertex<?>> seen, List<Integer> odds) {
+    if (seen.contains(starting)||starting==null) return 0;
+    seen.add(starting);
+    if (starting.data%2==1) odds.add(starting.data);
+    for (Vertex<Integer> neighbor : starting.neighbors) {
+      oddVertices(neighbor,seen,odds);
+    }
+    return odds.size();
+  }
+  public static <T> int oddVertices(Vertex<Integer> starting) {
+    List<Vertex<?>> seen = new ArrayList<>();
+    List<Integer> odds = new ArrayList<>();
+    return oddVertices(starting,seen,odds);
   }
 
   /**
@@ -46,8 +59,20 @@ public class Practice {
    * @param starting the starting vertex (may be null)
    * @return a sorted list of all reachable vertex values by 
    */
-  public static List<Integer> sortedReachable(Vertex<Integer> starting) {
-    return null;
+  public static List<Integer> sortedReachable(Vertex<Integer> current, List<Vertex<?>> seen, List<Integer> reachable) {
+    if (current==null||seen.contains(current)) return List.of();
+    seen.add(current);
+    reachable.add(current.data);
+    for (Vertex<Integer> neighbor : current.neighbors) {
+      sortedReachable(neighbor,seen,reachable);
+    }
+    Collections.sort(reachable);
+    return reachable;
+  }
+  public static <T> List<Integer> sortedReachable(Vertex<Integer> starting) {
+    List<Vertex<?>> seen = new ArrayList<>();
+    List<Integer> reachable = new ArrayList<>();
+    return sortedReachable(starting,seen,reachable);
   }
 
   /**
@@ -60,8 +85,20 @@ public class Practice {
    * @param starting the starting vertex value
    * @return a sorted list of all reachable vertex values
    */
+  public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting, List<Integer> sorted) {
+    if (!graph.containsKey(starting)) return List.of();
+    if (sorted.contains(starting)) return sorted;
+    sorted.add(starting);
+    for (Integer neighbor : graph.get(starting)) {
+      sortedReachable(graph, neighbor, sorted);
+    }
+    return sorted;
+  }
   public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
-    return null;
+    List<Integer> sorted = new ArrayList<>();
+    sortedReachable(graph,starting,sorted);
+    Collections.sort(sorted);
+    return sorted;
   }
 
   /**
@@ -78,8 +115,18 @@ public class Practice {
    * @param v2 the target vertex
    * @return true if there is a two-way connection between v1 and v2, false otherwise
    */
-  public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) {
+  public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2, List<Vertex<?>> seen) {
+    if (v1==null||v2==null) return false;
+    if (v1==v2) return true;
+    seen.add(v1);
+    for (Vertex<T> neighbor : v1.neighbors) {
+      return twoWay(neighbor, v2, seen);
+    }
     return false;
+  }
+  public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) {
+    List<Vertex<?>> seen = new ArrayList<>();
+    return (twoWay(v1, v2, seen)==twoWay(v2, v1, seen));
   }
 
   /**
@@ -94,8 +141,18 @@ public class Practice {
    * @param ending the ending vertex value
    * @return whether there exists a valid positive path from starting to ending
    */
-  public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) {
+  public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending, List<Integer> seen) {
+    if (starting<0||ending<0||!graph.containsKey(starting)) return false;
+    if (starting==ending) return true;
+    seen.add(starting);
+    for (Integer neighbor : graph.get(starting)) {
+      if (!seen.contains(neighbor)&&neighbor>0) return positivePathExists(graph, neighbor, ending, seen);
+    }
     return false;
+  }
+  public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) {
+    List<Integer> seen = new ArrayList<>();
+    return positivePathExists(graph, starting, ending, seen);
   }
 
   /**
@@ -107,8 +164,19 @@ public class Practice {
    * @param companyName the name of the company to check for employment
    * @return true if a person in the extended network works at the specified company, false otherwise
    */
-  public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
+  public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName, List<Professional> seen) {
+    if (person==null||seen.contains(person)) return false;
+    if (person.getCompany()==companyName) return true;
+    seen.add(person);
+    for (Professional connection : person.getConnections()) {
+      if (connection.getCompany()==companyName) return true;
+      return hasExtendedConnectionAtCompany(connection, companyName, seen);
+    }
     return false;
+  }
+  public static <T> boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
+    List<Professional> seen = new ArrayList<>();
+    return hasExtendedConnectionAtCompany(person, companyName, seen);
   }
 
   /**
@@ -179,6 +247,16 @@ public class Practice {
    * @return an unsorted list of next moves
    */
   public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) {
-    return null;
+    int currROW = current[0];
+    int currCOL = current[1];
+    List<int[]> possibleMoves = new ArrayList<>();
+    for (int[] dir : directions) {
+      int newROW = currROW + dir[0];
+      int newCOL = currCOL + dir[1];
+      if (newROW>=0&&newROW<board.length&&newCOL>=0&&newCOL<board[newROW].length) {
+        if (board[newROW][newCOL]!='X') possibleMoves.add(new int[]{newROW,newCOL});
+      }
+    }
+    return possibleMoves;
   }
 }
