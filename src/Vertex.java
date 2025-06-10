@@ -1,7 +1,8 @@
 import java.util.ArrayList;
 import java.util.List;
 
-public class Vertex<T> {
+public class Vertex<T> 
+{
   T data;
   List<Vertex<T>> neighbors;
 

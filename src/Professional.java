@@ -3,7 +3,8 @@ import java.util.Set;
 /**
  * Represents a professional with a LinkedIn-style network of connections.
  */
-class Professional {
+class Professional 
+{
   private String name;
   private String company;
   private int yearsOfExperience;

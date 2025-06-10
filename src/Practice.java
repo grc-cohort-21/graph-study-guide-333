@@ -1,10 +1,14 @@
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
-public class Practice {
+public class Practice 
+{
 
   /**
+   * #1
    * Returns the count of vertices with odd values that can be reached from the given starting vertex.
    * The starting vertex is included in the count if its value is odd.
    * If the starting vertex is null, returns 0.
@@ -24,11 +28,66 @@ public class Practice {
    * @param starting the starting vertex (may be null)
    * @return the number of vertices with odd values reachable from the starting vertex
    */
-  public static int oddVertices(Vertex<Integer> starting) {
-    return 0;
+  public static int oddVertices(Vertex<Integer> starting) 
+  {
+    //base case, start cannot be null
+    if(starting == null) return 0;
+
+    //this set called visited will track the visited vertices to avoid cycles and repeated work
+    Set<Vertex<Integer>> visited = new HashSet<>();
+
+    //Stack used for DFS traversal
+    Stack<Vertex<Integer>> stack = new Stack<>();
+    //starts the traversal from the starting vertex
+    stack.push(starting);
+
+    //counter for reachable vertices tat are odd
+    int count = 0; 
+
+    //this is the stack vertex that was created above used in this while loop 
+    while(!stack.isEmpty()) 
+    {
+      //this pops the next vertex from the top of the stack 
+      Vertex<Integer> current = stack.pop();
+      
+      //skip this vertex if its been visited
+      if(visited.contains(current)) continue;
+
+      //marker if the vertex has been visited
+      visited.add(current);
+
+      //check the current vertex odd value
+      //if mod 2 inst 0 we know its odd
+      if(current.data % 2 != 0)
+      {
+        count++; //increment counter for odd value vertex
+      }
+
+      //these will be the unvisited nieghbors 
+      //add them to the stack to explore later
+      for(Vertex<Integer> neighbor : current.neighbors)
+      {
+        //if neighbor hasnt been vistied
+        if(!visited.contains(neighbor))
+        {
+          //add later to visit
+          stack.push(neighbor);
+        }
+      }
+
+    }
+    return count;
+
+
   }
 
+
+
+
   /**
+   * 
+   * #2
+   * 
    * Returns a *sorted* list of all values reachable from the starting vertex (including the starting vertex itself).
    * If duplicate vertex data exists, duplicates should appear in the output.
    * If the starting vertex is null, returns an empty list.
@@ -46,11 +105,17 @@ public class Practice {
    * @param starting the starting vertex (may be null)
    * @return a sorted list of all reachable vertex values by 
    */
-  public static List<Integer> sortedReachable(Vertex<Integer> starting) {
+  public static List<Integer> sortedReachable(Vertex<Integer> starting) 
+  {
     return null;
   }
 
+
+
+
   /**
+   * #3
+   * 
    * Returns a sorted list of all values reachable from the given starting vertex in the provided graph.
    * The graph is represented as a map where each key is a vertex and its corresponding value is a set of neighbors.
    * It is assumed that there are no duplicate vertices.
@@ -60,11 +125,17 @@ public class Practice {
    * @param starting the starting vertex value
    * @return a sorted list of all reachable vertex values
    */
-  public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
+  public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) 
+  {
     return null;
   }
 
+
+
   /**
+   * 
+   * #4
+   * 
    * Returns true if and only if it is possible both to reach v2 from v1 and to reach v1 from v2.
    * A vertex is always considered reachable from itself.
    * If either v1 or v2 is null or if one cannot reach the other, returns false.
@@ -78,11 +149,18 @@ public class Practice {
    * @param v2 the target vertex
    * @return true if there is a two-way connection between v1 and v2, false otherwise
    */
-  public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) {
+  public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) 
+  {
     return false;
   }
 
+
+
+
   /**
+   * 
+   * #5
+   * 
    * Returns whether there exists a path from the starting to ending vertex that includes only positive values.
    * 
    * The graph is represented as a map where each key is a vertex and each value is a set of directly reachable neighbor vertices. A vertex is always considered reachable from itself.
@@ -94,11 +172,16 @@ public class Practice {
    * @param ending the ending vertex value
    * @return whether there exists a valid positive path from starting to ending
    */
-  public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) {
+  public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) 
+  {
     return false;
   }
 
+
+
   /**
+   * #6
+   * 
    * Returns true if a professional has anyone in their extended network (reachable through any number of links)
    * that works for the given company. The search includes the professional themself.
    * If the professional is null, returns false.
@@ -107,11 +190,16 @@ public class Practice {
    * @param companyName the name of the company to check for employment
    * @return true if a person in the extended network works at the specified company, false otherwise
    */
-  public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
+  public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) 
+  {
     return false;
   }
 
+
+
   /**
+   * #7
+   * 
    * Returns a list of possible next moves starting from a given position.
    * 
    * Starting from current, which is a [row, column] location, a player can move 
@@ -178,7 +266,8 @@ public class Practice {
    * @param directions an array of [row, column] possible directions
    * @return an unsorted list of next moves
    */
-  public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) {
+  public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) 
+  {
     return null;
   }
 }
