@@ -78,7 +78,26 @@ public class Practice {
    * @return a sorted list of all reachable vertex values by 
    */
   public static List<Integer> sortedReachable(Vertex<Integer> starting) {
-    
+    List<Integer> reachableValues = new ArrayList<>();
+
+    if (starting == null) return reachableValues;
+
+    Set<Vertex<Integer>> visited = new HashSet<>();
+    collectReachable(starting, reachableValues, visited);
+
+    Collections.sort(reachableValues);
+    return reachableValues;
+}
+
+private static void collectReachable(Vertex<Integer> current, List<Integer> values, Set<Vertex<Integer>> visited) {
+    if (current == null || visited.contains(current)) return;
+
+    visited.add(current);
+    values.add(current.data);
+
+    for (Vertex<Integer> neighbor : current.neighbors) {
+        collectReachable(neighbor, values, visited);
+    }
   }
 
   /**
