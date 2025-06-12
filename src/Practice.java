@@ -172,7 +172,30 @@ private static <T> boolean dfs(Vertex<T> current, Vertex<T> target, Set<Vertex<T
    * @return whether there exists a valid positive path from starting to ending
    */
   public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) {
-    return false;
+  Set<Integer> checkedNumbers = new HashSet<>();
+  return findPositivePath(graph, starting, ending, checkedNumbers);
+}
+
+public static boolean findPositivePath(Map<Integer, Set<Integer>> graph, int current, int target, Set<Integer> checkedNumbers) {
+  if (!graph.containsKey(current) || current <= 0 || target <= 0 || checkedNumbers.contains(current)) {
+      return false;
+  }
+
+  if (current == target) {
+      return true;
+  }
+
+  checkedNumbers.add(current);
+
+  for (int nextNumber : graph.get(current)) {
+      if (findPositivePath(graph, nextNumber, target, checkedNumbers)) {
+          return true;
+      }
+  }
+
+  return false;
+
+
   }
 
   /**
