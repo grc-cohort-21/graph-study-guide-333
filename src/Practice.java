@@ -78,7 +78,7 @@ public class Practice {
    * @return a sorted list of all reachable vertex values by 
    */
   public static List<Integer> sortedReachable(Vertex<Integer> starting) {
-    return null;
+    
   }
 
   /**
@@ -306,6 +306,22 @@ public static boolean checkNetwork(Professional current, String company, Set<Pro
    * @return an unsorted list of next moves
    */
   public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) {
-    return null;
-  }
+    List<int[]> moves = new ArrayList<>();
+    int row = current[0];
+    int col = current[1];
+
+    for (int[] step : directions) {
+        int newRow = row + step[0];
+        int newCol = col + step[1];
+
+        if (newRow >= 0 && newRow < board.length &&
+            newCol >= 0 && newCol < board[0].length &&
+            board[newRow][newCol] != 'X') {
+            moves.add(new int[]{newRow, newCol});
+        }
+    }
+
+    return moves;
+}
+  
 }
