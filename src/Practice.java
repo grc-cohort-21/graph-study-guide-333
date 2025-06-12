@@ -208,7 +208,34 @@ public static boolean findPositivePath(Map<Integer, Set<Integer>> graph, int cur
    * @return true if a person in the extended network works at the specified company, false otherwise
    */
   public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
-    return false;
+  if (person == null) 
+  
+  return false;
+
+  Set<Professional> checkedPeople = new HashSet<>();
+  return checkNetwork(person, companyName, checkedPeople);
+}
+
+public static boolean checkNetwork(Professional current, String company, Set<Professional> checkedPeople) {
+  if (checkedPeople.contains(current)) 
+  
+  return false;
+
+  if (company.equals(current.getCompany())) {
+      return true;
+  }
+
+  checkedPeople.add(current);
+
+  for (Professional connection : current.getConnections()) {
+      if (checkNetwork(connection, company, checkedPeople)) {
+          return true;
+      }
+  }
+
+  return false;
+
+
   }
 
   /**
