@@ -1,6 +1,12 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
+import java.util.Stack;
 
 public class Practice {
 
@@ -25,7 +31,29 @@ public class Practice {
    * @return the number of vertices with odd values reachable from the starting vertex
    */
   public static int oddVertices(Vertex<Integer> starting) {
-    return 0;
+    if(starting == null) return 0;
+    Set<Vertex<Integer>> seen = new HashSet<>();
+    Stack<Vertex<Integer>> order = new Stack<>();
+    int oddCount = 0;
+    order.push(starting);
+
+    while (!order.isEmpty()) {
+      Vertex<Integer> cur = order.pop();
+      if(seen.contains(cur)){
+        continue;
+      }
+      seen.add(cur);
+
+      if(cur.data % 2 != 0){
+        oddCount++;
+      }
+
+      for(Vertex<Integer> neighbor : cur.neighbors){
+        order.push(neighbor);
+      }
+    }
+
+    return oddCount;
   }
 
   /**
@@ -47,7 +75,42 @@ public class Practice {
    * @return a sorted list of all reachable vertex values by 
    */
   public static List<Integer> sortedReachable(Vertex<Integer> starting) {
-    return null;
+    /*
+     * dfs search 
+     * set for seen
+     * stack for order
+     * list for return
+     * check for null
+     * add to stack
+     * while stack is not empty
+     * pop off 
+     * add to seen 
+     * add to list
+     * add neighbors
+     * 
+     * after that sort list using collections
+     */
+    if(starting == null) return new ArrayList<>();
+    Stack<Vertex<Integer>> order = new Stack<>();
+    List<Integer> sorted = new ArrayList<>();
+    Set<Vertex<Integer>> seen = new HashSet<>();
+
+    order.push(starting);
+
+    while (!order.isEmpty()) {
+      Vertex<Integer> cur = order.pop();
+
+      if(seen.contains(cur)) continue;
+      seen.add(cur);      
+      sorted.add(cur.data);
+      for (Vertex<Integer> neighbor : cur.neighbors) {
+        order.push(neighbor);
+      }
+    }
+
+    Collections.sort(sorted);
+
+    return sorted;
   }
 
   /**
@@ -61,7 +124,40 @@ public class Practice {
    * @return a sorted list of all reachable vertex values
    */
   public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
-    return null;
+    /*
+     * check if graph is null or if starting doesnt exist it graph
+     * create a return list and an order stack
+     * add to stack 
+     * while stack ! empty
+     * pop to value 
+     * add to list
+     * for each neighbors
+     * add to stack
+     * 
+     * for each neighbor
+     */
+
+    if(graph == null || graph.get(starting) == null) return new ArrayList<>();
+
+    List<Integer> sorted = new ArrayList<>();
+    Stack<Integer> order = new Stack<>();
+    Set<Integer> seen = new HashSet<>();
+
+    order.push(starting);
+    while (!order.isEmpty()) {
+      int cur = order.pop();
+      if(seen.contains(cur)) continue;
+      seen.add(cur);
+      sorted.add(cur);
+
+      for (Integer neighbor : graph.get(cur)) {
+        order.add(neighbor);
+      }
+    }
+
+    Collections.sort(sorted);
+
+    return sorted;
   }
 
   /**
@@ -79,7 +175,50 @@ public class Practice {
    * @return true if there is a two-way connection between v1 and v2, false otherwise
    */
   public static <T> boolean twoWay(Vertex<T> v1, Vertex<T> v2) {
-    return false;
+    /*
+     * DFS
+     * create set for seen, stack for order
+     * if v1 || v2 is null return false
+     * do this twice for each way
+     * add to stack 
+     * while stack is not empty 
+     * pop to val
+     * check if v1 is in set
+     * add to set 
+     * check if v1 == v2
+     * return true 
+     * else for loop neighors add to stack
+     */
+    if(v1 == null || v2 == null) return false;
+    Stack<Vertex<T>> order = new Stack<>();
+    Set<Vertex<T>> seen1 = new HashSet<>();
+    Set<Vertex<T>> seen2 = new HashSet<>();
+
+    order.add(v1);
+    while (!order.isEmpty()) {
+      Vertex<T> cur = order.pop();
+      if(seen1.contains(cur)) continue;
+      seen1.add(cur);
+      
+      for(Vertex<T> neighbor : cur.neighbors){
+        order.push(neighbor);
+      }
+    }
+
+    if(!seen1.contains(v2)) return false;
+    
+    order.add(v2);
+    while (!order.isEmpty()) {
+      Vertex<T> cur = order.pop();
+      if(seen2.contains(cur)) continue;
+      seen2.add(cur);
+      
+      for(Vertex<T> neighbor : cur.neighbors){
+        order.push(neighbor);
+      }
+    }
+
+    return seen2.contains(v1);
   }
 
   /**
@@ -95,7 +234,43 @@ public class Practice {
    * @return whether there exists a valid positive path from starting to ending
    */
   public static boolean positivePathExists(Map<Integer, Set<Integer>> graph, int starting, int ending) {
-    return false;
+    /*
+     * DFS
+     * Create a set and a stack
+     * int value for increasing check
+     * add to stack
+     * while stack is not empty
+     * pop to value
+     * compare that value to max
+     * if greater continue else false
+     * 
+     * return true if cur == ending else false
+     */
+
+    if(graph == null || graph.get(starting) == null || graph.get(ending) == null || starting < 0 || ending < 0) return false;
+
+    Stack<Integer> order = new Stack<>();
+    Set<Integer> seen = new HashSet<>();
+
+    order.add(starting);
+
+    while (!order.isEmpty()) {
+      int cur = order.pop();
+
+      if(seen.contains(cur)) continue;
+      seen.add(cur);
+
+
+
+      for(int neighbor : graph.get(cur)){
+        if(neighbor >= 0){
+          order.push(neighbor);
+        }
+      }
+    }
+
+    
+    return seen.contains(ending);
   }
 
   /**
@@ -108,6 +283,35 @@ public class Practice {
    * @return true if a person in the extended network works at the specified company, false otherwise
    */
   public static boolean hasExtendedConnectionAtCompany(Professional person, String companyName) {
+    /*
+     * BFS
+     * create a set and queue for order
+     * add to qu
+     * while qu is not empty
+     * pop to value 
+     * add to set
+     * check if set contains companys name
+     * for each neighbor add the qu
+     */
+
+    if(person == null) return false;
+
+    Set<Professional> seen = new HashSet<>();
+    Queue<Professional> qu = new LinkedList<>();
+
+    qu.add(person);
+
+    while (!qu.isEmpty()) {
+      Professional cur = qu.poll();
+      if(seen.contains(cur)) continue;
+      seen.add(cur);
+      if(cur.getCompany().equals(companyName)) return true;
+      for (Professional professional : cur.getConnections()) {
+        qu.add(professional);
+      }
+    }
+
+
     return false;
   }
 
@@ -179,6 +383,25 @@ public class Practice {
    * @return an unsorted list of next moves
    */
   public static List<int[]> nextMoves(char[][] board, int[] current, int[][] directions) {
-    return null;
+    /*
+     * List that holds all available positions
+     * for loop that goes through each direction and looks at the value
+     * adds to the list if checks are passed
+     */
+    List<int[]> result = new ArrayList<>();
+
+    int curR = current[0];
+    int curC = current[1];
+
+    for (int[] direction : directions) {
+      int newR = curR + direction[0];
+      int newC = curC + direction[1];
+      
+      if(newR >= 0 && newR < board.length && newC >= 0 && newC < board[newR].length && board[newR][newC] != 'X'){
+        result.add(new int[]{newR, newC});
+      }
+    }
+
+    return result;
   }
 }
