@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -90,8 +92,29 @@ public class Practice {
    * @return a sorted list of all reachable vertex values
    */
   public static List<Integer> sortedReachable(Map<Integer, Set<Integer>> graph, int starting) {
-    return null;
-  }
+    List<Integer> values = new ArrayList<>();
+    if (!graph.containsKey(starting)) return values;
+
+    Set<Integer> visited = new HashSet<>();
+    Queue<Integer> toVisit = new LinkedList<>();
+    toVisit.add(starting);
+
+    while (!toVisit.isEmpty()) {
+        int current = toVisit.poll();
+
+        if (visited.add(current)) {
+            values.add(current);
+            for (int neighbor : graph.get(current)) {
+                if (!visited.contains(neighbor)) {
+                    toVisit.add(neighbor);
+                }
+            }
+        }
+    }
+
+    Collections.sort(values);
+    return values;
+}
 
   /**
    * Returns true if and only if it is possible both to reach v2 from v1 and to reach v1 from v2.
