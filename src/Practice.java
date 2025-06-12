@@ -135,6 +135,8 @@ private static void collectReachable(Vertex<Integer> current, List<Integer> valu
     return values;
 }
 
+
+
   /**
    * Returns true if and only if it is possible both to reach v2 from v1 and to reach v1 from v2.
    * A vertex is always considered reachable from itself.
